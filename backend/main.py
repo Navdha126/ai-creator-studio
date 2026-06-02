@@ -1,0 +1,74 @@
+from fastapi import FastAPI
+from pydantic import BaseModel
+import os
+from dotenv import load_dotenv
+from groq import Groq
+from memory import update_user_profile, get_user_profile
+
+load_dotenv()
+
+app = FastAPI()
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+class ContentRequest(BaseModel):
+    user_id: str
+    content_type: str
+    niche: str = None
+    tone: str = None
+
+class UserProfile(BaseModel):
+    user_id: str
+    niche: str
+    tone: str
+    audience: str
+
+@app.get("/")
+def home():
+    return {"message": "AI Creator Studio is running"}
+
+@app.post("/generate-caption")
+def generate_caption(request: ContentRequest):
+    profile = get_user_profile(request.user_id)
+    
+    niche = request.niche or (profile["niche"] if profile else "general")
+    tone = request.tone or (profile["tone"] if profile else "casual")
+    audience = profile["audience"] if profile else "general audience"
+
+    prompt = f"""
+    You are an expert Instagram content creator.
+    
+    Niche: {niche}
+    Tone: {tone}
+    Target Audience: {audience}
+    Content Type: {request.content_type}
+    
+    Generate:
+    1. Three Instagram captions
+    2. Ten relevant hashtags
+    3. One hook line
+    
+    Keep it engaging and authentic.
+    """
+    
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    
+    return {"result": response.choices[0].message.content}
+
+@app.post("/save-profile")
+def save_profile(profile: UserProfile):
+    update_user_profile(profile.user_id, {
+        "niche": profile.niche,
+        "tone": profile.tone,
+        "audience": profile.audience
+    })
+    return {"message": "Profile saved successfully"}
+
+@app.get("/get-profile/{user_id}")
+def get_profile(user_id: str):
+    profile = get_user_profile(user_id)
+    if not profile:
+        return {"message": "No profile found"}
+    return {"profile": profile}
