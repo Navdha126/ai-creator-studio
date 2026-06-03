@@ -72,3 +72,13 @@ def get_profile(user_id: str):
     if not profile:
         return {"message": "No profile found"}
     return {"profile": profile}
+
+from rag import add_pdf_to_knowledge_base, query_knowledge_base, rag_answer
+
+class RAGRequest(BaseModel):
+    question: str
+
+@app.post("/ask-knowledge-base")
+def ask_knowledge_base(request: RAGRequest):
+    answer = rag_answer(request.question, client, "llama-3.3-70b-versatile")
+    return {"answer": answer}

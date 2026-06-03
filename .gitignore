@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 user_memory.json
+venv/
+.venv/
+chroma_db/
