@@ -107,3 +107,65 @@ async def analyze_colors(file: UploadFile = File(...)):
 async def color_variations(hex_color: str):
     variations = get_complementary_colors(hex_color)
     return {"variations": variations}
+
+@app.post("/generate-smart-content")
+async def generate_smart_content(user_id: str, file: UploadFile = File(...)):
+    # Step 1: Get user memory
+    profile = get_user_profile(user_id)
+    niche = profile["niche"] if profile else "general"
+    tone = profile["tone"] if profile else "casual"
+    audience = profile["audience"] if profile else "general audience"
+
+    # Step 2: Extract colors from image
+    temp_path = f"temp_{file.filename}"
+    with open(temp_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    
+    palette = extract_dominant_colors(temp_path)
+    
+    import os
+    os.remove(temp_path)
+    
+    top_colors = ", ".join([c["hex"] for c in palette[:3]])
+
+    # Step 3: RAG retrieval
+    rag_context = query_knowledge_base(f"content strategy for {niche} instagram page")
+    strategy_knowledge = "\n".join(rag_context)
+
+    # Step 4: Generate unified content
+    prompt = f"""You are an expert Instagram content strategist and brand consultant.
+
+CREATOR PROFILE:
+- Niche: {niche}
+- Tone: {tone}
+- Target Audience: {audience}
+
+BRAND COLOR PALETTE:
+- Dominant colors: {top_colors}
+
+STRATEGY KNOWLEDGE:
+{strategy_knowledge}
+
+Based on ALL of the above, generate:
+1. Three on-brand Instagram captions matching the color aesthetic
+2. Ten relevant hashtags
+3. One powerful hook line
+4. One color-based content tip specific to their palette
+5. One strategic recommendation based on their niche
+
+Make everything cohesive and specific to this creator's brand."""
+
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    return {
+        "profile_used": {
+            "niche": niche,
+            "tone": tone,
+            "audience": audience
+        },
+        "color_palette": palette,
+        "content": response.choices[0].message.content
+    }
