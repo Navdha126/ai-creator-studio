@@ -1,23 +1,44 @@
-import shutil
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Form
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from typing import List, Optional
 import os
+import shutil
 from dotenv import load_dotenv
 from groq import Groq
 from memory import update_user_profile, get_user_profile
-from color_intelligence import extract_dominant_colors, analyze_brand_aesthetic, get_complementary_colors
-
+from rag import add_pdf_to_knowledge_base, query_knowledge_base, rag_answer
+from color_intelligence import (
+    extract_dominant_colors,
+    merge_palettes,
+    analyze_brand_aesthetic,
+    detect_archetype,
+    get_archetype_niche_alignment,
+    get_color_variations,
+    get_niche_colors
+)
 
 load_dotenv()
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+MODEL = "llama-3.3-70b-versatile"
+
+# ─── Models ───────────────────────────────────────────
 
 class ContentRequest(BaseModel):
     user_id: str
     content_type: str
-    niche: str = None
-    tone: str = None
+    niche: Optional[str] = None
+    tone: Optional[str] = None
 
 class UserProfile(BaseModel):
     user_id: str
@@ -25,40 +46,19 @@ class UserProfile(BaseModel):
     tone: str
     audience: str
 
+class RAGRequest(BaseModel):
+    question: str
+
+class ColorVariationRequest(BaseModel):
+    hex_color: str
+
+# ─── Basic ────────────────────────────────────────────
+
 @app.get("/")
 def home():
     return {"message": "AI Creator Studio is running"}
 
-@app.post("/generate-caption")
-def generate_caption(request: ContentRequest):
-    profile = get_user_profile(request.user_id)
-    
-    niche = request.niche or (profile["niche"] if profile else "general")
-    tone = request.tone or (profile["tone"] if profile else "casual")
-    audience = profile["audience"] if profile else "general audience"
-
-    prompt = f"""
-    You are an expert Instagram content creator.
-    
-    Niche: {niche}
-    Tone: {tone}
-    Target Audience: {audience}
-    Content Type: {request.content_type}
-    
-    Generate:
-    1. Three Instagram captions
-    2. Ten relevant hashtags
-    3. One hook line
-    
-    Keep it engaging and authentic.
-    """
-    
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[{"role": "user", "content": prompt}]
-    )
-    
-    return {"result": response.choices[0].message.content}
+# ─── Profile ──────────────────────────────────────────
 
 @app.post("/save-profile")
 def save_profile(profile: UserProfile):
@@ -76,87 +76,168 @@ def get_profile(user_id: str):
         return {"message": "No profile found"}
     return {"profile": profile}
 
-from rag import add_pdf_to_knowledge_base, query_knowledge_base, rag_answer
+# ─── Content Generation ───────────────────────────────
 
-class RAGRequest(BaseModel):
-    question: str
+@app.post("/generate-caption")
+def generate_caption(request: ContentRequest):
+    profile = get_user_profile(request.user_id)
+    niche = request.niche or (profile["niche"] if profile else "general")
+    tone = request.tone or (profile["tone"] if profile else "casual")
+    audience = profile["audience"] if profile else "general audience"
+
+    prompt = f"""You are an expert Instagram content creator.
+
+Niche: {niche}
+Tone: {tone}
+Target Audience: {audience}
+Content Type: {request.content_type}
+
+Generate:
+1. Three Instagram captions
+2. Ten relevant hashtags
+3. One hook line
+
+Keep it engaging and authentic."""
+
+    response = client.chat.completions.create(
+        model=MODEL,
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return {"result": response.choices[0].message.content}
+
+# ─── RAG ──────────────────────────────────────────────
 
 @app.post("/ask-knowledge-base")
 def ask_knowledge_base(request: RAGRequest):
-    answer = rag_answer(request.question, client, "llama-3.3-70b-versatile")
+    answer = rag_answer(request.question, client, MODEL)
     return {"answer": answer}
 
+# ─── Color Intelligence ───────────────────────────────
+
 @app.post("/analyze-colors")
-async def analyze_colors(file: UploadFile = File(...)):
-    temp_path = f"temp_{file.filename}"
-    with open(temp_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-    
-    palette = extract_dominant_colors(temp_path)
-    analysis = analyze_brand_aesthetic(palette, client, "llama-3.3-70b-versatile")
-    
-    import os
-    os.remove(temp_path)
-    
+async def analyze_colors(
+    files: List[UploadFile] = File(...),
+    niche: str = Form("general"),
+    vision: Optional[str] = Form(None)
+):
+    all_palettes = []
+    temp_files = []
+
+    for file in files:
+        temp_path = f"temp_{file.filename}"
+        with open(temp_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        temp_files.append(temp_path)
+        palette = extract_dominant_colors(temp_path)
+        all_palettes.append(palette)
+
+    for temp_path in temp_files:
+        os.remove(temp_path)
+
+    if len(all_palettes) == 1:
+        merged = all_palettes[0]
+    else:
+        merged = merge_palettes(all_palettes)
+
+    archetype = detect_archetype(merged)
+    alignment = get_archetype_niche_alignment(archetype["primary_archetype"], niche)
+    niche_colors = get_niche_colors(niche)
+
+    variations = {}
+    for color in merged[:3]:
+        variations[color["hex"]] = get_color_variations(color["hex"])
+
+    analysis = analyze_brand_aesthetic(merged, niche, vision or "", client, MODEL)
+
     return {
-        "palette": palette,
-        "analysis": analysis
+        "images_analyzed": len(files),
+        "unified_palette": merged,
+        "color_variations": variations,
+        "archetype": archetype,
+        "niche_alignment": alignment,
+        "niche_recommended_colors": {
+            "colors": niche_colors["recommended"],
+            "names": niche_colors["names"],
+            "reasoning": niche_colors["reasoning"]
+        },
+        "brand_analysis": analysis
     }
 
 @app.post("/color-variations")
-async def color_variations(hex_color: str):
-    variations = get_complementary_colors(hex_color)
+def color_variations(request: ColorVariationRequest):
+    variations = get_color_variations(request.hex_color)
     return {"variations": variations}
 
+# ─── Unified Smart Content ────────────────────────────
+
 @app.post("/generate-smart-content")
-async def generate_smart_content(user_id: str, file: UploadFile = File(...)):
-    # Step 1: Get user memory
+async def generate_smart_content(
+    user_id: str = Form(...),
+    content_type: str = Form(...),
+    vision: Optional[str] = Form(None),
+    files: List[UploadFile] = File(...)
+):
     profile = get_user_profile(user_id)
     niche = profile["niche"] if profile else "general"
     tone = profile["tone"] if profile else "casual"
     audience = profile["audience"] if profile else "general audience"
 
-    # Step 2: Extract colors from image
-    temp_path = f"temp_{file.filename}"
-    with open(temp_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-    
-    palette = extract_dominant_colors(temp_path)
-    
-    import os
-    os.remove(temp_path)
-    
-    top_colors = ", ".join([c["hex"] for c in palette[:3]])
+    all_palettes = []
+    temp_files = []
 
-    # Step 3: RAG retrieval
+    for file in files:
+        temp_path = f"temp_{file.filename}"
+        with open(temp_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        temp_files.append(temp_path)
+        palette = extract_dominant_colors(temp_path)
+        all_palettes.append(palette)
+
+    for temp_path in temp_files:
+        os.remove(temp_path)
+
+    if len(all_palettes) == 1:
+        merged = all_palettes[0]
+    else:
+        merged = merge_palettes(all_palettes)
+
+    archetype = detect_archetype(merged)
+    alignment = get_archetype_niche_alignment(archetype["primary_archetype"], niche)
+    top_colors = ", ".join([c["hex"] for c in merged[:3]])
+
     rag_context = query_knowledge_base(f"content strategy for {niche} instagram page")
     strategy_knowledge = "\n".join(rag_context)
 
-    # Step 4: Generate unified content
+    vision_text = f"Creator's vision: {vision}" if vision else ""
+
     prompt = f"""You are an expert Instagram content strategist and brand consultant.
 
 CREATOR PROFILE:
 - Niche: {niche}
 - Tone: {tone}
 - Target Audience: {audience}
+{vision_text}
 
-BRAND COLOR PALETTE:
+VISUAL BRAND ANALYSIS:
 - Dominant colors: {top_colors}
+- Visual archetype: {archetype["primary_archetype"]} ({archetype["confidence"]}% confidence)
+- Archetype description: {archetype["description"]}
+- Niche alignment: {alignment["message"]}
 
 STRATEGY KNOWLEDGE:
 {strategy_knowledge}
 
-Based on ALL of the above, generate:
-1. Three on-brand Instagram captions matching the color aesthetic
+Generate:
+1. Three on-brand Instagram captions that match the {archetype["primary_archetype"]} aesthetic
 2. Ten relevant hashtags
 3. One powerful hook line
-4. One color-based content tip specific to their palette
-5. One strategic recommendation based on their niche
+4. One color-based content tip referencing their actual palette
+5. One strategic recommendation based on their archetype and niche
 
-Make everything cohesive and specific to this creator's brand."""
+Make everything cohesive, specific, and reference the archetype by name."""
 
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model=MODEL,
         messages=[{"role": "user", "content": prompt}]
     )
 
@@ -164,8 +245,11 @@ Make everything cohesive and specific to this creator's brand."""
         "profile_used": {
             "niche": niche,
             "tone": tone,
-            "audience": audience
+            "audience": audience,
+            "vision": vision
         },
-        "color_palette": palette,
+        "color_palette": merged,
+        "archetype": archetype,
+        "niche_alignment": alignment,
         "content": response.choices[0].message.content
     }
