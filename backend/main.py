@@ -1,9 +1,12 @@
-from fastapi import FastAPI
+import shutil
+from fastapi import FastAPI, UploadFile, File
 from pydantic import BaseModel
 import os
 from dotenv import load_dotenv
 from groq import Groq
 from memory import update_user_profile, get_user_profile
+from color_intelligence import extract_dominant_colors, analyze_brand_aesthetic, get_complementary_colors
+
 
 load_dotenv()
 
@@ -82,3 +85,25 @@ class RAGRequest(BaseModel):
 def ask_knowledge_base(request: RAGRequest):
     answer = rag_answer(request.question, client, "llama-3.3-70b-versatile")
     return {"answer": answer}
+
+@app.post("/analyze-colors")
+async def analyze_colors(file: UploadFile = File(...)):
+    temp_path = f"temp_{file.filename}"
+    with open(temp_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    
+    palette = extract_dominant_colors(temp_path)
+    analysis = analyze_brand_aesthetic(palette, client, "llama-3.3-70b-versatile")
+    
+    import os
+    os.remove(temp_path)
+    
+    return {
+        "palette": palette,
+        "analysis": analysis
+    }
+
+@app.post("/color-variations")
+async def color_variations(hex_color: str):
+    variations = get_complementary_colors(hex_color)
+    return {"variations": variations}
