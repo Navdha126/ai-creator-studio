@@ -1,0 +1,213 @@
+{
+  "hooks": [
+    {
+      "hook": "POV: You're a ___ who wants to ___ without ___ and you find my page",
+      "category": "Identity Hook",
+      "why_it_works": "Speaks directly to a specific person's desire and pain point",
+      "example": "POV: You're a busy mom who wants to grow on Instagram without spending hours creating content"
+    },
+    {
+      "hook": "The biggest lesson I learnt about ___ and it is NOT ___",
+      "category": "Contrarian Hook",
+      "why_it_works": "Creates curiosity by contradicting common beliefs",
+      "example": "The biggest lesson I learnt about going viral and it is NOT posting every day"
+    },
+    {
+      "hook": "My ___ told me about the '___ theory' and it completely changed the way I ___",
+      "category": "Authority Hook",
+      "why_it_works": "Borrows credibility and creates curiosity through labelling",
+      "example": "My therapist told me about the 'Visibility Tax' and it completely changed how I show up online"
+    },
+    {
+      "hook": "Nobody talks about ___ but it's the reason you're not getting ___",
+      "category": "Secret Hook",
+      "why_it_works": "Creates urgency and positions you as someone with insider knowledge",
+      "example": "Nobody talks about watch time but it's the reason you're not getting views"
+    },
+    {
+      "hook": "Stop ___ and start ___ if you want ___",
+      "category": "Action Hook",
+      "why_it_works": "Direct, actionable, creates immediate desire to keep watching",
+      "example": "Stop posting carousels and start making reels if you want 10x more reach"
+    },
+    {
+      "hook": "How I went from ___ to ___ in ___ days (without ___)",
+      "category": "Transformation Hook",
+      "why_it_works": "Shows a concrete result with a timeframe \u2014 highly credible",
+      "example": "How I went from 200 to 57K followers in 115 days without paid ads"
+    },
+    {
+      "hook": "___ mistakes that are killing your ___ (and how to fix them)",
+      "category": "Number Hook",
+      "why_it_works": "Numbers create specificity and promise actionable value",
+      "example": "3 mistakes that are killing your Instagram reach (and how to fix them)"
+    },
+    {
+      "hook": "Things I wish I knew about ___ before I ___",
+      "category": "Regret Hook",
+      "why_it_works": "Creates relatability and positions content as hard-won wisdom",
+      "example": "Things I wish I knew about content creation before I wasted 2 years"
+    },
+    {
+      "hook": "We're this close to ___ (tiny text: being your favorite ___)",
+      "category": "Curiosity Hook",
+      "why_it_works": "Visual curiosity \u2014 makes viewers lean in to read the small text",
+      "example": "We're this close to launching something that will change your content game"
+    },
+    {
+      "hook": "It took me ___ years to learn this ___ trick \u2014 here it is in 60 seconds",
+      "category": "Time Hook",
+      "why_it_works": "Promises compressed value \u2014 years of knowledge in seconds",
+      "example": "It took me 3 years to learn this editing trick \u2014 here it is in 60 seconds"
+    },
+    {
+      "hook": "The ___ rule that top ___ creators use but never talk about",
+      "category": "Insider Hook",
+      "why_it_works": "Implies exclusive knowledge that most people don't have access to",
+      "example": "The 1% rule that top fitness creators use but never talk about"
+    },
+    {
+      "hook": "I gained ___ followers by doing the opposite of what everyone says",
+      "category": "Contrarian Result Hook",
+      "why_it_works": "Specific number + contrarian approach = irresistible curiosity",
+      "example": "I gained 40K followers by posting LESS content than everyone else"
+    },
+    {
+      "hook": "I tried ___ and here's what happened",
+      "category": "Personal Experience",
+      "why_it_works": "It works because people are curious about personal experiences and outcomes",
+      "example": "I tried using TikTok songs in my Instagram Reels and here's what happened"
+    },
+    {
+      "hook": "Want to know the secret to ___?",
+      "category": "Curiosity Driver",
+      "why_it_works": "It works because people are naturally curious and want to learn secrets and tips",
+      "example": "Want to know the secret to getting more followers on Facebook for free?"
+    },
+    {
+      "hook": "___ that will change your ___ strategy forever",
+      "category": "Game-Changer",
+      "why_it_works": "It works because people want to learn about new tools and strategies that can improve their results",
+      "example": "9 tools that will change your social media automation strategy forever"
+    },
+    {
+      "hook": "The #1 thing you're doing wrong with ___",
+      "category": "Mistake Revealer",
+      "why_it_works": "It works because people want to learn from their mistakes and improve their approach",
+      "example": "The #1 thing you're doing wrong with measuring social media value"
+    },
+    {
+      "hook": "Boost your ___ with these ___ tools",
+      "category": "Resource Provider",
+      "why_it_works": "It works because people are looking for resources and tools to help them achieve their goals",
+      "example": "Boost your content marketing with these 24 optimization tools"
+    }
+  ],
+  "formats": [
+    {
+      "format": "Three Video Stack",
+      "description": "3 horizontal videos showcasing your product/service sliding onto a surface",
+      "film": "3 horizontal clips \u2014 first two sliding onto a table, third showing the product",
+      "text": "Summer as a ___ or Summer at ___",
+      "sound": "Any trending audio",
+      "best_for": "Products, food, lifestyle brands"
+    },
+    {
+      "format": "Outfit Transition",
+      "description": "Film several angles layering clothing with a smooth transition",
+      "film": "Multiple angles layering clothing \u2014 use transition at the cut point",
+      "text": "None or a relatable caption about your outfit struggle",
+      "sound": "Trending audio with a beat drop",
+      "best_for": "Fashion, lifestyle, personal brand"
+    },
+    {
+      "format": "Wipe The Lens",
+      "description": "First clip empty table, wipe lens, second clip reveals product",
+      "film": "Clip 1: empty surface, hand wipes lens. Clip 2: hand wipes then reveals product",
+      "text": "wait... let me wipe the camera lens / that's better",
+      "sound": "Any trending sound",
+      "best_for": "Product reveals, launches, announcements"
+    },
+    {
+      "format": "Claw Machine Effect",
+      "description": "Pretend to grab product coming down like a claw machine",
+      "film": "Reach up to grab product, split clip at grab point, add claw overlay in CapCut",
+      "text": "Your product name or a fun caption",
+      "sound": "Fun upbeat trending audio",
+      "best_for": "Product showcase, UGC content"
+    },
+    {
+      "format": "We're This Close To...",
+      "description": "Photo of fingers pinching close together with tiny text between them",
+      "film": "Fingers pinching on aesthetic background, each slide zooms closer to tiny text",
+      "text": "We're this close to... (tiny text: being your favorite ___)",
+      "sound": "Any trending audio",
+      "best_for": "Teasers, announcements, building anticipation"
+    },
+    {
+      "format": "Educational Carousel",
+      "description": "Bold text first slide, value-packed slides, CTA on last slide",
+      "film": "Slide 1: Bold hook statement. Slides 2-6: one insight per slide. Last: CTA",
+      "text": "Hook on slide 1 must stop the scroll",
+      "sound": "No sound needed for carousels",
+      "best_for": "Education, tips, how-to content"
+    }
+  ],
+  "articles": [
+    {
+      "title": "13 Trending Songs on TikTok in June 2026 (+ How to Use Them)",
+      "summary": "An up-to-date list of the most viral songs and sounds on TikTok in June 2026 \u2014 and how to use them to boost your content.",
+      "link": "https://buffer.com/resources/trending-songs-tiktok/",
+      "source": "Buffer Resources"
+    },
+    {
+      "title": "How to Get More Followers on Facebook for Free in 2026: 10 Tried-and-True Tactics",
+      "summary": "Growing your Facebook following doesn't require a massive ad budget. These strategies can help you build an audience organically \u2014 it takes consistency and creativity, but it's totally doable.",
+      "link": "https://buffer.com/resources/how-to-get-more-followers-on-facebook/",
+      "source": "Buffer Resources"
+    },
+    {
+      "title": "9 Tools for Social Media Automation (+ Automation Pro Tips)",
+      "summary": "The best social media automation tools for 2026 and plenty of examples of tasks you can hand over.",
+      "link": "https://buffer.com/resources/social-media-automation-guide/",
+      "source": "Buffer Resources"
+    },
+    {
+      "title": "How to measure and communicate the value of social media",
+      "summary": "<p>Effective social media management requires investment: building and maintaining a dedicated social team, overseeing their time and using resources to support their work costs <a href=\"https://sproutsocial.com/insights/social-media-value/\">Read more...</a></p>\n<p>The post <a href=\"https://sproutsocial.com/insights/social-media-value/\">How to measure and communicate the value of social media</a> appeared first on <a href=\"https://sproutsocial.com/insights\">Sprout Social</a>.</p>",
+      "link": "https://sproutsocial.com/insights/social-media-value/",
+      "source": "Sprout Social"
+    },
+    {
+      "title": "24 content marketing tools to optimize your strategy and ROI",
+      "summary": "<p>Modern content marketing demands absolute precision, yet teams often stretch themselves thin trying to maintain a presence everywhere. Without the right infrastructure, scaling production <a href=\"https://sproutsocial.com/insights/content-marketing-tools/\">Read more...</a></p>\n<p>The post <a href=\"https://sproutsocial.com/insights/content-marketing-tools/\">24 content marketing tools to optimize your strategy and ROI</a> appeared first on <a href=\"https://sproutsocial.com/insights\">Sprout Social</a>.</p>",
+      "link": "https://sproutsocial.com/insights/content-marketing-tools/",
+      "source": "Sprout Social"
+    },
+    {
+      "title": "The economy is reshaping influencer storytelling",
+      "summary": "<p>Something is different about influencer content. The evolution started a few years ago. Glossy, highly-curated grids became lo-fi, as influencers traded inaccessible aspiration for <a href=\"https://sproutsocial.com/insights/influencer-marketing-storytelling/\">Read more...</a></p>\n<p>The post <a href=\"https://sproutsocial.com/insights/influencer-marketing-storytelling/\">The economy is reshaping influencer storytelling\u00a0</a> appeared first on <a href=\"https://sproutsocial.com/insights\">Sprout Social</a>.</p>",
+      "link": "https://sproutsocial.com/insights/influencer-marketing-storytelling/",
+      "source": "Sprout Social"
+    },
+    {
+      "title": "How to Create Content on LinkedIn to Attract Your Ideal Prospects",
+      "summary": "<img alt=\"How to Create Content on LinkedIn to Attract Your Ideal Prospects by Social Media Examiner\" class=\"webfeedsFeaturedVisual wp-post-image\" height=\"1080\" src=\"https://www.socialmediaexaminer.com/wp-content/uploads/2026/05/SMMP721_PRIMARY_BLUE.jpg\" style=\"display: block; margin-bottom: 5px; clear: both;\" width=\"1920\" /><p>Wondering how to attract the people on LinkedIn who actually want to buy from you? Want to know which LinkedIn post formats drive the right kind of reach and engagement? In this article, you'll discover a three-part LinkedIn content funnel framework plus the specific post formats and posting ratios that make it work. Why You [&#8230;]</p>\n<p>The post <a href=\"https://www.socialmediaexaminer.com/how-to-create-content-on-linkedin-to-attract-your-ideal-prospects/\">How to Create Content on LinkedIn to Attract Your Ideal Prospects</a> appeared first on <a href=\"https://www.socialmediaexaminer.com\">Social Media Examiner</a>.</p>",
+      "link": "https://www.socialmediaexaminer.com/how-to-create-content-on-linkedin-to-attract-your-ideal-prospects/",
+      "source": "Social Media Examiner"
+    },
+    {
+      "title": "AI for Better Ad Creative: 3 Steps to Better Results",
+      "summary": "<img alt=\"AI for Better Ad Creative: 3 Steps to Better Results by Social Media Examiner\" class=\"webfeedsFeaturedVisual wp-post-image\" height=\"1080\" src=\"https://www.socialmediaexaminer.com/wp-content/uploads/2026/05/AIP108_PRIMARY.jpg\" style=\"display: block; margin-bottom: 5px; clear: both;\" width=\"1920\" /><p>Struggling to combat ad fatigue without burning out your design team? Wonder how your small brand can generate the ad volume Meta's algorithm now requires? In this article, you'll discover a three-step system for using AI to produce high-quality image and video ad creative at scale. Why Most Marketers Are Wrong About AI Ad Creative [&#8230;]</p>\n<p>The post <a href=\"https://www.socialmediaexaminer.com/ai-for-better-ad-creative-3-steps-to-better-results/\">AI for Better Ad Creative: 3 Steps to Better Results</a> appeared first on <a href=\"https://www.socialmediaexaminer.com\">Social Media Examiner</a>.</p>",
+      "link": "https://www.socialmediaexaminer.com/ai-for-better-ad-creative-3-steps-to-better-results/",
+      "source": "Social Media Examiner"
+    },
+    {
+      "title": "How to Adjust Your Content for LinkedIn\u2019s New Feed Algorithm",
+      "summary": "<img alt=\"How to Adjust Your Content for LinkedIn&#039;s New Feed Algorithm by Social Media Examiner\" class=\"webfeedsFeaturedVisual wp-post-image\" height=\"1080\" src=\"https://www.socialmediaexaminer.com/wp-content/uploads/2026/05/SMMP720_PRIMARY.jpg\" style=\"display: block; margin-bottom: 5px; clear: both;\" width=\"1920\" /><p>Is your LinkedIn reach falling? Do you know which signals LinkedIn's algorithm now uses to decide who actually sees your content? In this article, you'll discover how LinkedIn's rebuilt feed algorithm changes who sees your content. #1: Your Content Strategy and the New LinkedIn Feed Algorithm LinkedIn has undergone one of the most significant overhauls [&#8230;]</p>\n<p>The post <a href=\"https://www.socialmediaexaminer.com/how-to-adjust-your-content-for-linkedins-new-feed-algorithm/\">How to Adjust Your Content for LinkedIn&#8217;s New Feed Algorithm</a> appeared first on <a href=\"https://www.socialmediaexaminer.com\">Social Media Examiner</a>.</p>",
+      "link": "https://www.socialmediaexaminer.com/how-to-adjust-your-content-for-linkedins-new-feed-algorithm/",
+      "source": "Social Media Examiner"
+    }
+  ],
+  "last_updated": "2026-06-04T20:45:55.000185"
+}

@@ -1,3 +1,5 @@
+from apscheduler.schedulers.background import BackgroundScheduler
+from trends import refresh_trends, get_trends
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -21,6 +23,16 @@ from color_intelligence import (
 load_dotenv()
 
 app = FastAPI()
+
+# ─── Scheduler ────────────────────────────────────────
+scheduler = BackgroundScheduler()
+
+def scheduled_refresh():
+    refresh_trends(client, MODEL)
+    print("Trends refreshed automatically")
+
+scheduler.add_job(scheduled_refresh, 'interval', hours=24)
+scheduler.start()
 
 app.add_middleware(
     CORSMiddleware,
@@ -253,3 +265,15 @@ Make everything cohesive, specific, and reference the archetype by name."""
         "niche_alignment": alignment,
         "content": response.choices[0].message.content
     }
+
+# ─── Trends ───────────────────────────────────────────
+
+@app.get("/trends")
+def get_trending():
+    trends = get_trends()
+    return trends
+
+@app.post("/refresh-trends")
+def manual_refresh():
+    trends = refresh_trends(client, MODEL)
+    return {"message": "Trends refreshed", "hooks_count": len(trends["hooks"])}
