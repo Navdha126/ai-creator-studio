@@ -102,7 +102,6 @@ cd backend
 pip install -r requirements.txt
 ```
 
-Create a `.env` file in the backend folder:
 
 Run the server:
 ```bash
@@ -190,7 +189,10 @@ I didn't want to manually update a trends database. So I built a background sche
 
 ## 👩‍💻 About Me
 
-Hi, I'm Navdha — a 3rd year BTech CSE student who got deep into GenAI and wanted to prove I could build something real with it, not just follow a tutorial.
+Hi, I'm Navdha — a 3rd year BTech CSE student focused on AI/ML. 
+I built this project to get hands-on experience with RAG pipelines, 
+vector databases, computer vision, and LLM integration. 
+
 
 This project taught me more than any course did. I ran into real problems — model deprecations, network restrictions, Python version conflicts, Git history issues — and figured them out. That's the part that actually matters.
 
