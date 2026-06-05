@@ -1,5 +1,3 @@
-from apscheduler.schedulers.background import BackgroundScheduler
-from trends import refresh_trends, get_trends
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -8,6 +6,7 @@ import os
 import shutil
 from dotenv import load_dotenv
 from groq import Groq
+from apscheduler.schedulers.background import BackgroundScheduler
 from memory import update_user_profile, get_user_profile
 from rag import add_pdf_to_knowledge_base, query_knowledge_base, rag_answer
 from color_intelligence import (
@@ -19,20 +18,14 @@ from color_intelligence import (
     get_color_variations,
     get_niche_colors
 )
+from trends import refresh_trends, get_trends
+from image_gen import generate_image_prompt, generate_image_hf, generate_post
 
 load_dotenv()
 
+os.environ["HF_TOKEN"] = os.getenv("HF_TOKEN", "")
+
 app = FastAPI()
-
-# ─── Scheduler ────────────────────────────────────────
-scheduler = BackgroundScheduler()
-
-def scheduled_refresh():
-    refresh_trends(client, MODEL)
-    print("Trends refreshed automatically")
-
-scheduler.add_job(scheduled_refresh, 'interval', hours=24)
-scheduler.start()
 
 app.add_middleware(
     CORSMiddleware,
@@ -43,6 +36,16 @@ app.add_middleware(
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 MODEL = "llama-3.3-70b-versatile"
+
+# ─── Scheduler ────────────────────────────────────────
+scheduler = BackgroundScheduler()
+
+def scheduled_refresh():
+    refresh_trends(client, MODEL)
+    print("Trends refreshed automatically")
+
+scheduler.add_job(scheduled_refresh, 'interval', hours=24)
+scheduler.start()
 
 # ─── Models ───────────────────────────────────────────
 
@@ -63,6 +66,10 @@ class RAGRequest(BaseModel):
 
 class ColorVariationRequest(BaseModel):
     hex_color: str
+
+class ImageRequest(BaseModel):
+    user_id: str
+    vision: Optional[str] = None
 
 # ─── Basic ────────────────────────────────────────────
 
@@ -277,3 +284,28 @@ def get_trending():
 def manual_refresh():
     trends = refresh_trends(client, MODEL)
     return {"message": "Trends refreshed", "hooks_count": len(trends["hooks"])}
+
+# ─── Image Generation ─────────────────────────────────
+
+@app.post("/generate-image")
+def create_image(request: ImageRequest):
+    profile = get_user_profile(request.user_id)
+    niche = profile["niche"] if profile else "general"
+    vision = request.vision or f"Beautiful {niche} content"
+
+    image_prompt = generate_image_prompt(
+        niche, vision, "luxury_mystic", [], client, MODEL
+    )
+    image_data = generate_image_hf(image_prompt)
+
+    return image_data
+
+@app.post("/generate-post")
+def create_post(request: ImageRequest):
+    profile = get_user_profile(request.user_id)
+    niche = profile["niche"] if profile else "general"
+    vision = request.vision or f"Beautiful {niche} content"
+
+    post = generate_post(niche, vision, "luxury_mystic", [], client, MODEL)
+
+    return post
